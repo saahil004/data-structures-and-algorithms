@@ -1,0 +1,99 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct myArr {
+    int capacity;
+    int used;
+    int *base;
+};
+typedef struct myArr arr;
+
+void createArray(arr *myarr) {
+    myarr->base = (int *)calloc(myarr->capacity, sizeof(int));
+}
+
+void displayArray(arr myarr) {
+    for (int i = 0; i < myarr.used; i++) {
+        printf("%d ", *(myarr.base + i));
+    }
+    printf("\n");
+}
+
+void initializeArray(arr *myarr) {
+    for (int i = 0; i < myarr->used; i++) {
+        printf("Enter element number %d: ", i + 1);
+        scanf("%d", &myarr->base[i]);
+    }
+}
+
+void destroyArray(arr *myarr) {
+    free(myarr->base);
+}
+
+int sortedInsertion(arr *myarr) {
+    int i = 0, e;
+    if (myarr->used >= myarr->capacity) {
+        return -1;
+    }
+    printf("Enter the value to be entered: ");
+    scanf("%d", &e);
+    while (myarr->base[i] < e && i < myarr->used) {
+        i++;
+    }
+    for (int j = myarr->used - 1; j >= i; j--) {
+        myarr->base[j+1] = myarr->base[j];  
+    }
+    myarr->base[i] = e;
+    myarr->used++;
+    return i;
+}
+
+int insertion(arr *myarr) {
+    if (myarr->used >= myarr->capacity) {
+        return -1;
+    }
+    int index, element;
+    printf("\nEnter index: ");
+    scanf("%d", &index);
+    printf("Enter element: ");
+    scanf("%d", &element);
+    if (index >= myarr->capacity || index < 0) {
+        return -1;
+    }
+    for (int i = myarr->used-1; i >= index; i--) {
+        myarr->base[i + 1] = myarr->base[i];
+    }
+    myarr->base[index] = element;
+    myarr->used++;
+    return index;
+}
+
+void deletion(arr *myarr) {
+    int i;
+    printf("Enter the index of the value to be deleted: ");
+    scanf("%d", &i);
+    if (i >= myarr->capacity || i < 0 || myarr->used <= 0) {
+        return;
+    }
+    for (int j = i; j < myarr->used - 1; j++) {
+        myarr->base[i] = myarr->base[i+1]; 
+    }
+    myarr->used--;
+}
+
+int main() {
+    arr myarr;
+    printf("Enter capacity of array: ");
+    scanf("%d", &myarr.capacity);
+    printf("Enter usage of array: ");
+    scanf("%d", &myarr.used);
+    createArray(&myarr);
+    initializeArray(&myarr);
+    displayArray(myarr);
+    sortedInsertion(&myarr);
+    displayArray(myarr);
+    deletion(&myarr);
+    displayArray(myarr);
+    destroyArray(&myarr);
+    return 0;
+}
